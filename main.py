@@ -2,12 +2,9 @@ from dotenv import load_dotenv
 import os
 import logging
 import yt_dlp
-import json
-from telegram import Update, ForceReply, InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
-from telegram.ext import Updater, CommandHandler, MessageHandler, filters, CallbackContext, CallbackQueryHandler
+from telegram import Update, ForceReply
+from telegram.ext import Updater, CommandHandler, MessageHandler, filters, CallbackContext
 
-
-# https://gitlab.com/Athamaxy/telegram-bot-tutorial/-/blob/main/TutorialBot.py
 logger = logging.getLogger(__name__)
 
 
