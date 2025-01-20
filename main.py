@@ -5,8 +5,11 @@ import yt_dlp
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, filters, CallbackContext
 
+# Load the environment variables
+load_dotenv('.env')
+TELEGRAMBOTTOKEN = os.getenv("TELEGRAMBOTTOKEN")
+DOWNLOAD_FOLDER = os.getenv("DOWNLOAD_FOLDER")
 logger = logging.getLogger(__name__)
-
 
 def download_music(file_link: str, folder: str) -> str:
     """
@@ -55,7 +58,7 @@ def process_link(update: Update, context: CallbackContext) -> None:
         else:
             send_message_to_user(update, context, "Sorry, I can only download from Youtube and Soundcloud. Please send a valid link.")
             return
-        video_title = download_music(file_info["file_link"], f"downloads/{file_info['file_website']}/")
+        video_title = download_music(file_info["file_link"], f"{DOWNLOAD_FOLDER}/{file_info['file_website']}/")
         logger.info(f"Downloaded {video_title}")
         send_message_to_user(update, context, f"Successfully downloaded {video_title}.")
         
@@ -88,10 +91,6 @@ def main() -> None:
     """
     This is the main function that runs the bot
     """
-    # Load the environment variables
-    load_dotenv('.env')
-    TELEGRAMBOTTOKEN = os.getenv("TELEGRAMBOTTOKEN")
-    DOWNLOAD_FOLDER = os.getenv("DOWNLOAD_FOLDER")
     updater = Updater(TELEGRAMBOTTOKEN)
 
     # Get the dispatcher to register handlers
