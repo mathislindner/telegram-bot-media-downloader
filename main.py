@@ -8,7 +8,6 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, filters, Callb
 # Load the environment variables
 load_dotenv('.env')
 TELEGRAMBOTTOKEN = os.getenv("TELEGRAMBOTTOKEN")
-DOWNLOAD_FOLDER = os.getenv("DOWNLOAD_FOLDER")
 logger = logging.getLogger(__name__)
 
 def download_music(file_link: str, folder: str) -> str:
@@ -51,14 +50,14 @@ def process_link(update: Update, context: CallbackContext) -> None:
         file_info["file_link"] = update.message.text
         send_message_to_user(update, context, "Successfully received the link! Processing...")
         # cehck which website the link is from (youtube or soundcloud)
-        if "youtube" in file_info["file_link"]:
+        if "youtube" in file_info["file_link"] or "youtu.be" in file_info["file_link"]:
             file_info["file_website"] = "youtube"
         elif "soundcloud" in file_info["file_link"]:
             file_info["file_website"] = "soundcloud"
         else:
             send_message_to_user(update, context, "Sorry, I can only download from Youtube and Soundcloud. Please send a valid link.")
             return
-        video_title = download_music(file_info["file_link"], f"{DOWNLOAD_FOLDER}/{file_info['file_website']}/")
+        video_title = download_music(file_info["file_link"], f"/downloads/{file_info['file_website']}/")
         logger.info(f"Downloaded {video_title}")
         send_message_to_user(update, context, f"Successfully downloaded {video_title}.")
         
