@@ -6,7 +6,7 @@ from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, filters, CallbackContext
 
 # Load the environment variables
-load_dotenv('.env')
+load_dotenv()
 TELEGRAMBOTTOKEN = os.getenv("TELEGRAMBOTTOKEN")
 logger = logging.getLogger(__name__)
 
