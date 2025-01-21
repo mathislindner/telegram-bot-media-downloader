@@ -30,6 +30,16 @@ def download_music(file_link: str, folder: str) -> str:
         ydl.download([file_link])
     return video_title
 
+def get_save_location(file_website: str, file_type: str) -> str:
+    """
+    This function returns the folder where the music will be saved
+    if the file is a single file, it will be saved in /downloads/{file_website}/singles/
+    """
+    if file_type == "single":
+        return f"/downloads/{file_website}/singles/"
+    else:
+        return f"/downloads/{file_website}/"
+    
 def process_link(update: Update, context: CallbackContext) -> None:
     """
     This function would be added to the dispatcher as a handler for messages coming from the Bot API
@@ -40,6 +50,7 @@ def process_link(update: Update, context: CallbackContext) -> None:
     file_info = {
         "file_link" : None,
         "file_website" : None,
+        "file_type" : "single"
     }
     if not update.message.text:
         # This is equivalent to forwarding, without the sender's name
@@ -52,12 +63,17 @@ def process_link(update: Update, context: CallbackContext) -> None:
         # cehck which website the link is from (youtube or soundcloud)
         if "youtube" in file_info["file_link"] or "youtu.be" in file_info["file_link"]:
             file_info["file_website"] = "youtube"
+            file_info["file_type"] = "playlist" if "playlist" in file_info["file_link"] else "single"
         elif "soundcloud" in file_info["file_link"]:
             file_info["file_website"] = "soundcloud"
+            file_info["file_type"] = "playlist" if "sets" in file_info["file_link"] else "single"
         else:
             send_message_to_user(update, context, "Sorry, I can only download from Youtube and Soundcloud. Please send a valid link.")
             return
-        video_title = download_music(file_info["file_link"], f"/downloads/{file_info['file_website']}/")
+        #check if single file or play list
+
+        save_location = get_save_location(file_info["file_website"], file_info["file_type"])
+        video_title = download_music(file_info["file_link"], save_location)
         logger.info(f"Downloaded {video_title}")
         send_message_to_user(update, context, f"Successfully downloaded {video_title}.")
         
