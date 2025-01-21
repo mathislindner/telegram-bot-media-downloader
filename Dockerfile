@@ -4,8 +4,7 @@ FROM python:3.11-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy main.py and requirements.txt into the container at /app
-COPY main.py /app
+COPY src /app/src
 COPY requirements.txt /app
 
 # Install ffmpeg
@@ -15,4 +14,4 @@ RUN apt-get update && apt-get install -y ffmpeg
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Run app.py when the container launches
-CMD ["python", "main.py"]
+CMD ["python", "src/main.py"]
